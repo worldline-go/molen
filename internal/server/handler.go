@@ -16,7 +16,7 @@ import (
 )
 
 type Handler struct {
-	Ctx            context.Context // application context
+	Ctx            context.Context //nolint:containedctx // no need
 	Client         *wkafka.Client
 	ProduceMessage func(ctx context.Context, data ...Message) error
 }
@@ -56,7 +56,7 @@ func (m Message) ProducerHook(r *wkafka.Record) *wkafka.Record {
 func (h Handler) Publish(c echo.Context) error {
 	topic := c.QueryParam("topic")
 	if topic == "" {
-		return c.JSON(http.StatusBadRequest, APIRespond{Error: "topic is empty"})
+		return c.JSON(http.StatusBadRequest, APIRespond{Error: "topic is empty"}) //nolint:wrapcheck // no need
 	}
 	partitionRaw := c.QueryParam("partition")
 
@@ -65,7 +65,9 @@ func (h Handler) Publish(c echo.Context) error {
 	if partitionRaw != "" {
 		partition64, err := strconv.ParseInt(partitionRaw, 10, 32)
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, APIRespond{Error: fmt.Sprintf("unable to parse partition err: %s", err)})
+			return c.JSON(http.StatusBadRequest, //nolint:wrapcheck // no need
+				APIRespond{Error: fmt.Sprintf("unable to parse partition err: %s", err)},
+			)
 		}
 
 		partition = int32(partition64)
@@ -73,16 +75,16 @@ func (h Handler) Publish(c echo.Context) error {
 
 	body := c.Request().Body
 	if body == nil {
-		return c.JSON(http.StatusBadRequest, APIRespond{Error: "body is empty"})
+		return c.JSON(http.StatusBadRequest, APIRespond{Error: "body is empty"}) //nolint:wrapcheck // no need
 	}
 
 	data, err := io.ReadAll(body)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, APIRespond{Error: fmt.Sprintf("unable to read body err: %s", err)})
+		return c.JSON(http.StatusBadRequest, APIRespond{Error: fmt.Sprintf("unable to read body err: %s", err)}) //nolint:wrapcheck // no need
 	}
 
 	if !json.Valid(data) {
-		return c.JSON(http.StatusBadRequest, APIRespond{Error: "body is not valid json"})
+		return c.JSON(http.StatusBadRequest, APIRespond{Error: "body is not valid json"}) //nolint:wrapcheck // no need
 	}
 
 	var key []byte
@@ -100,13 +102,19 @@ func (h Handler) Publish(c echo.Context) error {
 
 	if err := h.ProduceMessage(h.Ctx, msg); err != nil {
 		if errors.Is(err, kerr.UnknownTopicOrPartition) {
-			return c.JSON(http.StatusBadRequest, APIRespond{Error: fmt.Sprintf("topic [%s] or specific partition does not exist", topic)})
+			return c.JSON(http.StatusBadRequest, //nolint:wrapcheck // no need
+				APIRespond{Error: fmt.Sprintf("topic [%s] or specific partition does not exist", topic)},
+			)
 		}
 
-		return c.JSON(http.StatusInternalServerError, APIRespond{Error: fmt.Sprintf("unable to write message err: %s", err)})
+		return c.JSON(http.StatusInternalServerError, //nolint:wrapcheck // no need
+			APIRespond{Error: fmt.Sprintf("unable to write message err: %s", err)},
+		)
 	}
 
 	log.Ctx(c.Request().Context()).Debug().Str("topic", topic).Str("data", string(data)).Msgf("published write")
 
-	return c.JSON(http.StatusOK, APIRespond{Message: fmt.Sprintf("successfully published to [%s]", topic)})
+	return c.JSON(http.StatusOK, //nolint:wrapcheck // no need
+		APIRespond{Message: fmt.Sprintf("successfully published to [%s]", topic)},
+	)
 }

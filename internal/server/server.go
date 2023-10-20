@@ -50,7 +50,7 @@ func Set(ctx context.Context, cfg SetConfig) (*echo.Echo, error) {
 
 	basePath := path.Join("/", config.Application.BasePath, "/v1")
 	if err := docs.Info(basePath, config.AppVersion, cfg.Provider); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to set info; %w", err)
 	}
 
 	e := echo.New()
@@ -86,7 +86,7 @@ func Set(ctx context.Context, cfg SetConfig) (*echo.Echo, error) {
 
 	producerMessage, err := wkafka.NewProducer(cfg.Client, wkafka.ProducerConfig[Message]{})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to init producer; %w", err)
 	}
 
 	// routes"

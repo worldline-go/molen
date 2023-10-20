@@ -48,7 +48,7 @@ func run(ctx context.Context, _ *sync.WaitGroup) error {
 	if err != nil {
 		return fmt.Errorf("failed to init telemetry; %w", err)
 	}
-	defer collector.Shutdown()
+	defer collector.Shutdown() //nolint:errcheck // no need
 
 	client, err := wkafka.NewClient(
 		config.Application.KafkaConfig,
@@ -78,7 +78,7 @@ func run(ctx context.Context, _ *sync.WaitGroup) error {
 	}
 
 	// add server shutdown function if context is canceled
-	initializer.Shutdown.Add(func() error { return server.Stop(e) }, initializer.WithShutdownName("server"))
+	initializer.Shutdown.Add(func() error { return server.Stop(e) }, initializer.WithShutdownName("server")) //nolint:wrapcheck // no need
 
 	// start server
 	if err := server.Start(e); err != nil {

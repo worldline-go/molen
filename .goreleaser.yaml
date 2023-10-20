@@ -1,0 +1,88 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+project_name: molen
+
+release:
+  header: |
+    Get the latest release with brew or binary:
+
+    ```sh
+    # brew tap brew-tools/tap
+    brew install molen
+    # or binary download
+    # curl -fSL https://github.com/worldline-go/molen/releases/latest/download/molen_Linux_x86_64.tar.gz | tar -xz --overwrite -C ~/bin/ molen
+    curl -fSL https://github.com/worldline-go/molen/releases/download/{{ .Tag }}/molen_Linux_x86_64.tar.gz | tar -xz --overwrite -C ~/bin/ molen
+    ```
+  footer: |
+    **Full Changelog**: https://github.com/worldline-go/molen/compare/{{ .PreviousTag }}...{{ .Tag }}
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    main: ./cmd/molen
+    ldflags:
+      - -s -w -X main.version=v{{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}}
+    flags:
+      - -trimpath
+archives:
+  - name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+checksum:
+  name_template: '{{ .ProjectName }}-{{ .Version }}-checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+    - '^test:'
+    - '^chore'
+    - 'merge conflict'
+    - Merge pull request
+    - Merge remote-tracking branch
+    - Merge branch
+    - go mod tidy
+  groups:
+    - title: Dependency updates
+      regexp: "^.*feat\\(deps\\)*:+.*$"
+      order: 300
+    - title: 'New Features'
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 100
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 200
+    - title: 'Documentation updates'
+      regexp: "^.*docs[(\\w)]*:+.*$"
+      order: 400
+    - title: Other work
+      order: 9999
+
+brews:
+- name: molen
+  homepage: https://github.com/worldline-go/molen
+  description: "pub/sub api"
+  tap:
+    owner: brew-tools
+    name: homebrew-tap
+    token: "{{ .Env.BREW_TOKEN }}"
+  folder: Formula

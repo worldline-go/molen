@@ -324,8 +324,8 @@ github.com/worldline-go/tell v0.4.0 h1:a1v7nmG/idfqTGZp1688zeWK4ro89ZwM01xdblnVj
 github.com/worldline-go/tell v0.4.0/go.mod h1:g1dao/nw1XRXXzkoEXpFPlYGosmPmi5m+oR88S7M5Wk=
 github.com/worldline-go/tell/metric/metricecho v0.4.0 h1:7rm6jGhPZU8TvJd5fjfuzrw8Mk/MFSH0r7Iq2G5O3ro=
 github.com/worldline-go/tell/metric/metricecho v0.4.0/go.mod h1:07D5su4rJGrd87AVFOlTah6sxeZ287vGbKloBZDiKJY=
-github.com/worldline-go/wkafka v0.0.1 h1:VNoBFrlnRM5qTnjmkBfnhl1t2Lt9NtA9MiNMZoimC24=
-github.com/worldline-go/wkafka v0.0.1/go.mod h1:UYuhh7stN/5AiOQabBZMoOPVf8WATRqSI3VEuaoollw=
+github.com/worldline-go/wkafka v0.0.2 h1:MbPbRlAXvd/T4MOotYOKu32hDA0iT+Y0jJOiKXAxVbE=
+github.com/worldline-go/wkafka v0.0.2/go.mod h1:UYuhh7stN/5AiOQabBZMoOPVf8WATRqSI3VEuaoollw=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/ziflex/lecho/v3 v3.5.0 h1:Z4TBr8SbUUnfaVc8tGJf1Jhu0G9Jxjl77lPW0riXKak=
 github.com/ziflex/lecho/v3 v3.5.0/go.mod h1:+eInrytYHxVPI6NQbua9xXGerB1x0ujj9jAV33yBIko=

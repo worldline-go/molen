@@ -15,7 +15,7 @@ require (
 	github.com/worldline-go/swagger v1.0.0
 	github.com/worldline-go/tell v0.4.0
 	github.com/worldline-go/tell/metric/metricecho v0.4.0
-	github.com/worldline-go/wkafka v0.0.1
+	github.com/worldline-go/wkafka v0.0.2
 	github.com/ziflex/lecho/v3 v3.5.0
 )
 

@@ -14,7 +14,7 @@ GOLANGCI_LINT_VERSION := v1.54.2
 .PHONY: run env build golangci docs lint test coverage help
 
 run: ## Run the binary file
-	go run main.go
+	go run cmd/molen/main.go
 
 env: ## Run environment in foreground
 	docker compose -p molen -f env/docker-compose.yml up

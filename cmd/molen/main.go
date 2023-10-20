@@ -55,6 +55,7 @@ func run(ctx context.Context, _ *sync.WaitGroup) error {
 		wkafka.WithAutoTopicCreation(false),
 		wkafka.WithKGOOptions(
 			kgo.UnknownTopicRetries(0),
+			kgo.ProducerBatchCompression(kgo.NoCompression()),
 		),
 	)
 	if err != nil {

@@ -3,18 +3,18 @@ module github.com/worldline-go/molen
 go 1.21.1
 
 require (
-	github.com/labstack/echo/v4 v4.11.1
+	github.com/labstack/echo/v4 v4.11.3
 	github.com/rs/zerolog v1.31.0
 	github.com/swaggo/swag v1.16.2
 	github.com/twmb/franz-go v1.15.0
-	github.com/worldline-go/auth v0.7.0
+	github.com/worldline-go/auth v0.7.4
 	github.com/worldline-go/echo-swagger v1.3.5
 	github.com/worldline-go/igconfig v0.2.4
-	github.com/worldline-go/initializer v0.2.3
+	github.com/worldline-go/initializer v0.2.4
 	github.com/worldline-go/logz v0.5.0
 	github.com/worldline-go/swagger v1.0.0
-	github.com/worldline-go/tell v0.4.0
-	github.com/worldline-go/tell/metric/metricecho v0.4.0
+	github.com/worldline-go/tell v0.5.0
+	github.com/worldline-go/tell/metric/metricecho v0.5.0
 	github.com/worldline-go/wkafka v0.0.2
 	github.com/ziflex/lecho/v3 v3.5.0
 )
@@ -30,7 +30,7 @@ require (
 	github.com/cenkalti/backoff/v3 v3.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/go-logr/logr v1.2.4 // indirect
+	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
@@ -87,28 +87,27 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/worldline-go/struct2 v1.2.3 // indirect
-	go.opentelemetry.io/otel v1.18.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlpmetric v0.41.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v0.41.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.18.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.18.0 // indirect
-	go.opentelemetry.io/otel/metric v1.18.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.18.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v0.41.0 // indirect
-	go.opentelemetry.io/otel/trace v1.18.0 // indirect
+	go.opentelemetry.io/otel v1.21.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v0.44.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.21.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.21.0 // indirect
+	go.opentelemetry.io/otel/metric v1.21.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.21.0 // indirect
+	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
-	golang.org/x/net v0.12.0 // indirect
-	golang.org/x/oauth2 v0.10.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/oauth2 v0.11.0 // indirect
+	golang.org/x/sys v0.14.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.7.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20230711160842-782d3b101e98 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230711160842-782d3b101e98 // indirect
-	google.golang.org/grpc v1.58.0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230822172742-b8732ec3820d // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
+	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

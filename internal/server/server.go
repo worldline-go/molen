@@ -9,7 +9,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog/log"
 	"github.com/worldline-go/auth"
-	"github.com/worldline-go/auth/jwks"
 	"github.com/worldline-go/auth/pkg/authecho"
 	echoSwagger "github.com/worldline-go/echo-swagger"
 	"github.com/worldline-go/logz/logecho"
@@ -39,7 +38,7 @@ type SetConfig struct {
 // @tokenUrl								[[ .Custom.tokenUrl ]]
 // @authorizationUrl						[[ .Custom.authUrl ]]
 func Set(ctx context.Context, cfg SetConfig) (*echo.Echo, error) {
-	j, err := cfg.Provider.JWTKeyFunc(jwks.WithContext(ctx))
+	j, err := cfg.Provider.JWTKeyFunc(auth.WithContext(ctx))
 	if err != nil {
 		return nil, fmt.Errorf("failed to get key func; %w", err)
 	}

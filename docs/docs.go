@@ -55,6 +55,12 @@ const docTemplate = `{
                         "schema": {
                             "type": "object"
                         }
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "raw body",
+                        "name": "raw",
+                        "in": "query"
                     }
                 ],
                 "responses": {

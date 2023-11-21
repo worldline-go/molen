@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
 	"github.com/twmb/franz-go/pkg/kerr"
+	"github.com/worldline-go/molen/internal/decoder"
 	"github.com/worldline-go/wkafka"
 )
 
@@ -49,6 +50,7 @@ func (m Message) ProducerHook(r *wkafka.Record) *wkafka.Record {
 // @Param partition query int32 false "specific partition number"
 // @Param key query string false "key"
 // @Param payload body interface{} false "send key values" SchemaExample()
+// @Param raw query bool false "raw body"
 // @Accept application/json
 // @Success 200 {object} APIRespond{}
 // @failure 400 {object} APIRespond{}
@@ -83,24 +85,47 @@ func (h Handler) Publish(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, APIRespond{Error: fmt.Sprintf("unable to read body err: %s", err)}) //nolint:wrapcheck // no need
 	}
 
-	if !json.Valid(data) {
-		return c.JSON(http.StatusBadRequest, APIRespond{Error: "body is not valid json"}) //nolint:wrapcheck // no need
-	}
-
+	// key
 	var key []byte
 	keyRaw := c.QueryParam("key")
 	if keyRaw != "" {
 		key = []byte(keyRaw)
 	}
 
-	msg := Message{
-		Data:      data,
-		Topic:     topic,
-		Partition: partition,
-		Key:       key,
+	// raw
+	isRaw, _ := strconv.ParseBool(c.QueryParam("raw"))
+
+	msg := []Message{}
+	if !isRaw {
+		if !json.Valid(data) {
+			return c.JSON(http.StatusBadRequest, APIRespond{Error: "body is not valid json"}) //nolint:wrapcheck // no need
+		}
+
+		var msgs decoder.Messages
+		if err := json.Unmarshal(data, &msgs); err != nil {
+			return c.JSON(http.StatusBadRequest, //nolint:wrapcheck // no need
+				APIRespond{Error: fmt.Sprintf("unable to unmarshal json err: %s", err)},
+			)
+		}
+
+		for _, m := range msgs {
+			msg = append(msg, Message{
+				Data:      m,
+				Topic:     topic,
+				Partition: partition,
+				Key:       key,
+			})
+		}
+	} else {
+		msg = append(msg, Message{
+			Data:      data,
+			Topic:     topic,
+			Partition: partition,
+			Key:       key,
+		})
 	}
 
-	if err := h.ProduceMessage(h.Ctx, msg); err != nil {
+	if err := h.ProduceMessage(h.Ctx, msg...); err != nil {
 		if errors.Is(err, kerr.UnknownTopicOrPartition) {
 			return c.JSON(http.StatusBadRequest, //nolint:wrapcheck // no need
 				APIRespond{Error: fmt.Sprintf("topic [%s] or specific partition does not exist", topic)},

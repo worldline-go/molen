@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/worldline-go/igconfig"
 	"github.com/worldline-go/tell"
@@ -41,6 +42,8 @@ func Load(ctx context.Context) error {
 	if err := igconfig.LoadConfigWithContext(ctx, AppName, &Application); err != nil {
 		return fmt.Errorf("unable to load config err: %w", err)
 	}
+
+	Application.BasePath = "/" + strings.Trim(strings.TrimSpace(Application.BasePath), "/")
 
 	return nil
 }

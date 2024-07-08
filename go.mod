@@ -3,7 +3,6 @@ module github.com/worldline-go/molen
 go 1.22
 
 require (
-	github.com/google/uuid v1.3.1
 	github.com/labstack/echo/v4 v4.11.3
 	github.com/rs/zerolog v1.32.0
 	github.com/swaggo/swag v1.16.2

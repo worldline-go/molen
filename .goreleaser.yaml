@@ -84,8 +84,8 @@ brews:
 - name: molen
   homepage: https://github.com/worldline-go/molen
   description: "pub/sub api"
-  tap:
+  repository:
     owner: brew-tools
     name: homebrew-tap
     token: "{{ .Env.BREW_TOKEN }}"
-  folder: Formula
+  directory: Formula

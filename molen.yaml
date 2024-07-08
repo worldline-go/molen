@@ -1,0 +1,8 @@
+log_level: debug
+# base_path: "/molen"
+kafka_config:
+  brokers: ["localhost:9092"]
+  security:
+    tls:
+      enabled: false
+    sasl: []

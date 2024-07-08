@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/worldline-go/auth"
 	"github.com/worldline-go/igconfig"
 	"github.com/worldline-go/tell"
 	"github.com/worldline-go/wkafka"
@@ -27,17 +26,10 @@ var Application = struct {
 	KafkaConfig wkafka.Config `cfg:"kafka_config"`
 	// Telemetry configurations
 	Telemetry tell.Config
-
-	// AuthService for authentication to API
-	AuthService auth.Provider `cfg:"auth_service"`
-	Roles       Roles         `cfg:"roles"`
 }{
 	Host:     "0.0.0.0",
 	Port:     "8080",
 	LogLevel: "info",
-	AuthService: auth.Provider{
-		Active: "noop",
-	},
 }
 
 type Roles struct {

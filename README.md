@@ -32,4 +32,4 @@ Run molen with make file:
 make run
 ```
 
-Access to http://localhost:8080/v1/swagger/index.html for API swagger page.
+Access to http://localhost:8080/swagger/index.html for API swagger page.

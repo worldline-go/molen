@@ -50,28 +50,20 @@ func run(ctx context.Context, _ *sync.WaitGroup) error {
 	}
 	defer collector.Shutdown() //nolint:errcheck // no need
 
-	client, err := wkafka.NewClient(
+	client, err := wkafka.New(
+		ctx,
 		config.Application.KafkaConfig,
 		wkafka.WithAutoTopicCreation(false),
 		wkafka.WithKGOOptions(
 			kgo.UnknownTopicRetries(0),
-			kgo.ProducerBatchCompression(kgo.NoCompression()),
 		),
 	)
 	if err != nil {
 		return err //nolint:wrapcheck // no need
 	}
 
-	// provider
-	provider := config.Application.AuthService.ActiveProvider()
-	if provider == nil {
-		return fmt.Errorf("no active provider")
-	}
-
-	// server wait
 	e, err := server.Set(ctx, server.SetConfig{
-		Client:   client,
-		Provider: provider,
+		Client: client,
 	})
 	if err != nil {
 		return err //nolint:wrapcheck // no need

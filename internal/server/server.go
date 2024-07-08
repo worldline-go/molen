@@ -3,13 +3,10 @@ package server
 import (
 	"context"
 	"fmt"
-	"path"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/rs/zerolog/log"
-	"github.com/worldline-go/auth"
-	"github.com/worldline-go/auth/pkg/authecho"
 	echoSwagger "github.com/worldline-go/echo-swagger"
 	"github.com/worldline-go/logz/logecho"
 	"github.com/worldline-go/tell/metric/metricecho"
@@ -18,37 +15,21 @@ import (
 
 	"github.com/worldline-go/molen/docs"
 	"github.com/worldline-go/molen/internal/config"
+	"github.com/worldline-go/molen/internal/kafka"
 )
 
 type SetConfig struct {
-	Client   *wkafka.Client
-	Provider auth.InfProviderExtra
+	Client *wkafka.Client
 }
 
 // @description github.com/worldline-go/molen
-// @description Authorization as "Bearer TOKEN" or use oauth2 login
 // @BasePath /v1
-// @securityDefinitions.apikey	ApiKeyAuth
-// @in header
-// @name Authorization
-// @securityDefinitions.apikey	ApiKeyAuth
-// @in header
-// @name Authorization
-// @securitydefinitions.oauth2.accessCode	OAuth2AccessCode
-// @tokenUrl								[[ .Custom.tokenUrl ]]
-// @authorizationUrl						[[ .Custom.authUrl ]]
 func Set(ctx context.Context, cfg SetConfig) (*echo.Echo, error) {
-	j, err := cfg.Provider.JWTKeyFunc(auth.WithContext(ctx))
-	if err != nil {
-		return nil, fmt.Errorf("failed to get key func; %w", err)
-	}
-
 	if config.Application.BasePath != "" {
 		log.Ctx(ctx).Info().Msgf("base path is set to %s", config.Application.BasePath)
 	}
 
-	basePath := path.Join("/", config.Application.BasePath, "/v1")
-	if err := docs.Info(basePath, config.AppVersion, cfg.Provider); err != nil {
+	if err := docs.Info(config.Application.BasePath, config.AppVersion); err != nil {
 		return nil, fmt.Errorf("failed to set info; %w", err)
 	}
 
@@ -75,30 +56,25 @@ func Set(ctx context.Context, cfg SetConfig) (*echo.Echo, error) {
 		middleware.Gzip(),
 	)
 
-	groupV1 := e.Group(basePath)
+	base := e.Group(config.Application.BasePath)
+	base.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	groupV1.GET("/swagger/*", echoSwagger.EchoWrapHandler(func(c *echoSwagger.Config) {
-		c.OAuth = &echoSwagger.OAuthConfig{
-			ClientId: cfg.Provider.GetClientIDExternal(),
-		}
-	}))
-
-	producerMessage, err := wkafka.NewProducer(cfg.Client, wkafka.ProducerConfig[Message]{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to init producer; %w", err)
-	}
+	groupV1 := base.Group("/v1")
 
 	// routes"
+	kafkaAdmin := cfg.Client.Admin()
 	handler := Handler{
+		Ctx:            ctx,
 		Client:         cfg.Client,
-		ProduceMessage: producerMessage.Produce,
+		ProduceMessage: cfg.Client.ProduceRaw,
+		ClientAdmin:    kafkaAdmin,
+		Group: kafka.Group{
+			ClientAdmin: kafkaAdmin,
+		},
 	}
 
-	mJWT := authecho.MiddlewareJWT(
-		authecho.WithKeyFunc(j.Keyfunc),
-	)
-
-	groupV1.POST("/publish", handler.Publish, mJWT, authecho.MiddlewareRole(authecho.WithRoles(config.Application.Roles.Write...)))
+	groupV1.POST("/publish/{topic}/{partition}", handler.Publish)
+	groupV1.POST("/group", handler.CreateGroup)
 
 	return e, nil
 }

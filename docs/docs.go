@@ -15,14 +15,47 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/publish": {
+        "/v1/group": {
             "post": {
-                "security": [
+                "description": "Create a specific group and not consume any message.",
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Create group",
+                "parameters": [
                     {
-                        "ApiKeyAuth": [],
-                        "OAuth2AccessCode": []
+                        "description": "topic and group_id",
+                        "name": "payload",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/internal_server.GroupRequest"
+                        }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_server.APIRespond"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_server.APIRespond"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_server.APIRespond"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/publish": {
+            "post": {
                 "description": "Publish message(s) to kafka with topic and partition(optional)",
                 "consumes": [
                     "application/json"
@@ -33,19 +66,25 @@ const docTemplate = `{
                         "type": "string",
                         "description": "topic name",
                         "name": "topic",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     },
                     {
                         "type": "integer",
                         "description": "specific partition number",
                         "name": "partition",
-                        "in": "query"
+                        "in": "path"
                     },
                     {
                         "type": "string",
                         "description": "key",
                         "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "raw body",
+                        "name": "raw",
                         "in": "query"
                     },
                     {
@@ -55,12 +94,6 @@ const docTemplate = `{
                         "schema": {
                             "type": "object"
                         }
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "raw body",
-                        "name": "raw",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -90,26 +123,24 @@ const docTemplate = `{
         "internal_server.APIRespond": {
             "type": "object",
             "properties": {
-                "error": {
-                    "type": "string"
-                },
                 "message": {
                     "type": "string"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         },
-        "OAuth2AccessCode": {
-            "type": "oauth2",
-            "flow": "accessCode",
-            "authorizationUrl": "[[ .Custom.authUrl ]]",
-            "tokenUrl": "[[ .Custom.tokenUrl ]]"
+        "internal_server.GroupRequest": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "string"
+                },
+                "topic": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
@@ -121,7 +152,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/v1",
 	Schemes:          []string{},
 	Title:            "",
-	Description:      "github.com/worldline-go/molen\nAuthorization as \"Bearer TOKEN\" or use oauth2 login",
+	Description:      "github.com/worldline-go/molen",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -15,8 +16,7 @@ import (
 var shutdownTimeout = 5 * time.Second
 
 func Start(e *echo.Echo) error {
-	// custom host
-	hostPort := config.Application.Host + ":" + config.Application.Port
+	hostPort := net.JoinHostPort(config.Application.Host, config.Application.Port)
 	if err := e.Start(hostPort); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("failed to start server: %w", err)
 	}

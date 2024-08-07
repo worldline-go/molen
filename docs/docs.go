@@ -66,14 +66,14 @@ const docTemplate = `{
                         "type": "string",
                         "description": "topic name",
                         "name": "topic",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     },
                     {
                         "type": "integer",
                         "description": "specific partition number",
                         "name": "partition",
-                        "in": "path"
+                        "in": "query"
                     },
                     {
                         "type": "string",

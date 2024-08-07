@@ -58,8 +58,8 @@ func (h Handler) CreateGroup(c echo.Context) error {
 // @Summary Publish message
 // @Description Publish message(s) to kafka with topic and partition(optional)
 // @Router /v1/publish [post]
-// @Param topic path string true "topic name"
-// @Param partition path int32 false "specific partition number"
+// @Param topic query string true "topic name"
+// @Param partition query int32 false "specific partition number"
 // @Param key query string false "key"
 // @Param raw query bool false "raw body"
 // @Param payload body interface{} false "send key values" SchemaExample()
@@ -69,7 +69,8 @@ func (h Handler) CreateGroup(c echo.Context) error {
 // @failure 500 {object} APIRespond{}
 func (h Handler) Publish(c echo.Context) error {
 	publish := PublishRequest{}
-	if err := c.Bind(&publish); err != nil {
+	binder := echo.DefaultBinder{}
+	if err := binder.BindQueryParams(c, &publish); err != nil {
 		return c.JSON(http.StatusBadRequest, APIRespond{Message: fmt.Sprintf("unable to bind request err: %s", err)})
 	}
 

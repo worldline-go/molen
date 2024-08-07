@@ -33,17 +33,14 @@ var Application = struct {
 	LogLevel: "info",
 }
 
-type Roles struct {
-	Admin []string `cfg:"admin"`
-	Write []string `cfg:"write"`
-}
-
 func Load(ctx context.Context) error {
 	if err := igconfig.LoadConfigWithContext(ctx, AppName, &Application); err != nil {
 		return fmt.Errorf("unable to load config err: %w", err)
 	}
 
-	Application.BasePath = "/" + strings.Trim(strings.TrimSpace(Application.BasePath), "/")
+	if Application.BasePath != "" {
+		Application.BasePath = "/" + strings.Trim(strings.TrimSpace(Application.BasePath), "/")
+	}
 
 	return nil
 }

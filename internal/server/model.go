@@ -5,10 +5,10 @@ type APIRespond struct {
 }
 
 type PublishRequest struct {
-	Topic     string `json:"topic"     param:"topic"`
-	Partition int32  `json:"partition" param:"partition"`
-	Key       string `json:"key"       query:"key"`
-	Raw       bool   `json:"raw"       query:"raw"`
+	Topic     string `query:"topic"`
+	Partition int32  `query:"partition"`
+	Key       string `query:"key"`
+	Raw       bool   `query:"raw"`
 }
 
 type GroupRequest struct {

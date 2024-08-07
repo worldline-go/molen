@@ -73,7 +73,7 @@ func Set(ctx context.Context, cfg SetConfig) (*echo.Echo, error) {
 		},
 	}
 
-	groupV1.POST("/publish/{topic}/{partition}", handler.Publish)
+	groupV1.POST("/publish", handler.Publish)
 	groupV1.POST("/group", handler.CreateGroup)
 
 	return e, nil
